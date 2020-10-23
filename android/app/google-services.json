@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "314076673375",
+    "firebase_url": "https://tapthis-fb0b3.firebaseio.com",
+    "project_id": "tapthis-fb0b3",
+    "storage_bucket": "tapthis-fb0b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:314076673375:android:61991121edb73496",
+        "android_client_info": {
+          "package_name": "com.example.tapthis_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "314076673375-97d20snr04d08avfaodt8jbgarpehplv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW1Do6nzHt9e0e7jeCJNSLsbJmPZYGwns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "314076673375-97d20snr04d08avfaodt8jbgarpehplv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "314076673375-sfaid9m3bl3fmfff3lnr68896pjjr4r8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tapThis"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
