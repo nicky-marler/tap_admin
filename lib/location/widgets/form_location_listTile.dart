@@ -18,16 +18,20 @@ class FormLocationListTile extends FormField<Placemark> {
           onSaved: onSaved,
           validator: validator,
           initialValue: initalValue,
-          autovalidate: autovalidate,
+          // ignore: deprecated_member_use
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           builder: (FormFieldState<Placemark> state) {
             Widget _buildSubTitle() {
-              if(state.hasError){
-                return Text("Select Address", style: TextStyle(color: Colors.red,),);
-              }
-              else if(state.value == null){
+              if (state.hasError) {
+                return Text(
+                  "Select Address",
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                );
+              } else if (state.value == null) {
                 return Text("Enter new address");
-              }
-              else{
+              } else {
                 return Text("${state.value.name} ${state.value.thoroughfare}");
               }
             }
@@ -36,7 +40,9 @@ class FormLocationListTile extends FormField<Placemark> {
               child: ListTile(
                 title: Text("Address"),
                 // leading: Icon(Icons.place),
-                trailing: Icon(Icons.place, ),
+                trailing: Icon(
+                  Icons.place,
+                ),
                 subtitle: _buildSubTitle(),
                 onTap: () async {
                   FocusScope.of(context).requestFocus(new FocusNode());

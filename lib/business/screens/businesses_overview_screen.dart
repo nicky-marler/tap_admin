@@ -45,7 +45,15 @@ class _BusinessesOverviewScreenState extends State<BusinessesOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     void _addBusiness(BuildContext context) async {
-      await Navigator.of(context).pushNamed(BusinessAddScreen.routeName);
+      await Navigator.of(context)
+          .pushNamed(BusinessAddScreen.routeName)
+          .then((rebuildScreen) => rebuildScreen
+              ? setState(() {
+                  getBusiness =
+                      Provider.of<BusinessProvider>(context, listen: false)
+                          .getBusinesses();
+                })
+              : null);
     }
 
     return Scaffold(

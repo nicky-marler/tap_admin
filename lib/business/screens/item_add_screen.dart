@@ -43,7 +43,6 @@ class _ItemAddScreenState extends State<ItemAddScreen> {
     // Validate returns true if the form is valid, otherwise false.
     if (_formKey.currentState.validate() && itemForm.validateSelectedDays) {
       setState(() {
-
         _formKey.currentState.save();
       });
 
@@ -56,6 +55,7 @@ class _ItemAddScreenState extends State<ItemAddScreen> {
 
       final submissionResults = await showSubmissionDialog(
           context: context, onSubmitFuture: submitFuture);
+      Navigator.of(context).pop(true);
 
       bool isSuccess = submissionResults.submissionSuccess;
       //final results = submissionResults.futureResult as DocumentReference;
@@ -183,7 +183,8 @@ class _ItemAddScreenState extends State<ItemAddScreen> {
                               filled: true,
                               hintText: "Name",
                             ),
-                            autovalidate: _autoValidate,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             validator: (value) {
                               String result = value.trim();
                               if (result.isEmpty) {
@@ -205,7 +206,8 @@ class _ItemAddScreenState extends State<ItemAddScreen> {
                               filled: true,
                               hintText: "Details",
                             ),
-                            autovalidate: _autoValidate,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             validator: (value) {
                               String result = value.trim();
                               if (result.isEmpty) {

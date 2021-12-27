@@ -5,24 +5,30 @@ class BusinessForm {
   String name;
   Placemark placemark;
   Location location;
+  Position p;
 
   OperationalHoursProvider operationalHoursProvider =
       OperationalHoursProvider();
 
   Future<void> setLocation() async {
-    List<Location> listLocation = await locationFromAddress(placemark.street + placemark.isoCountryCode + 
-      placemark.country + placemark.postalCode + placemark.administrativeArea + placemark.subAdministrativeArea + 
-      placemark.locality + placemark.subLocality + placemark.thoroughfare + placemark.subThoroughfare);
+    List<Location> listLocation = await locationFromAddress(placemark.street +
+        placemark.isoCountryCode +
+        placemark.country +
+        placemark.postalCode +
+        placemark.administrativeArea +
+        placemark.subAdministrativeArea +
+        placemark.locality +
+        placemark.subLocality +
+        placemark.thoroughfare +
+        placemark.subThoroughfare);
 
     this.location = listLocation.first;
   }
 
   Map<String, dynamic> toMap() {
-    GeoHash geoHash =
-        GeoHash(location.latitude, location.longitude);
+    GeoHash geoHash = GeoHash(location.latitude, location.longitude);
 
-    GeoPoint geoPoint =
-        GeoPoint(location.latitude, location.longitude);
+    GeoPoint geoPoint = GeoPoint(location.latitude, location.longitude);
 
     return {
       'name': name,

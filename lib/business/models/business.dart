@@ -89,14 +89,9 @@ class Business {
   @override
   String toString() => "Business <$name:$streetName>";
 
-  Future<void> setDistance() async {
-    Position userPosition = LocationService.userPosition;
-
+  Future<void> setDistance(double latitdue, double longitude) async {
     double distanceInMeters = Geolocator.distanceBetween(
-        userPosition.latitude,
-        userPosition.longitude,
-        this.geoPoint.latitude,
-        this.geoPoint.longitude);
+        latitdue, longitude, this.geoPoint.latitude, this.geoPoint.longitude);
     String distanceInMiles = (distanceInMeters * 0.00062137).toStringAsFixed(1);
 
     distance = distanceInMiles;

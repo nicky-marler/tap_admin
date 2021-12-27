@@ -24,12 +24,24 @@ class BusinessProvider with ChangeNotifier {
   }
 
   Future<void> getBusinesses() async {
-    Query query = await getQuery();
+    double latitdue;
+    double longitude;
+
+    if (filterCurrentLocation) {
+      Position position = await Geolocator.getCurrentPosition();
+      //position = await getCurrentPosition(desiredAccuracy: LocationAccuracy.high) ?? await getLastKnownPosition();
+      latitdue = position.latitude;
+      longitude = position.longitude;
+    } else {
+      //This needs to be fixed on how i'm getting the select location/placemark/ or whatever it is called
+    }
+
+    Query query = await getQuery(latitdue, longitude);
     QuerySnapshot results = await query.get();
     _businesses =
         results.docs.map((doc) => Business.fromFirestore(doc)).toList();
-    await Future.forEach(
-        _businesses, (Business business) => business.setDistance());
+    await Future.forEach(_businesses,
+        (Business business) => business.setDistance(latitdue, longitude));
   }
 
   static Future<List<Item>> getItemsByDay(String day, String businessId) async {
@@ -80,21 +92,11 @@ class BusinessProvider with ChangeNotifier {
   }
 
   //Build the database query to fetch businesses based on location.
-  Future<Query> getQuery() async {
+  Future<Query> getQuery(double latitude, double longitude) async {
     Query query = businessCollection;
 
     double sectionDistance;
     String distanceString;
-    Position position;
-
-    if (filterCurrentLocation) {
-      //position = await getCurrentPosition(desiredAccuracy: LocationAccuracy.high) ?? await getLastKnownPosition();
-      await LocationService.setUserPlacemark();
-      position = LocationService.userPosition;
-    }
-
-    double geoLat = position.latitude ?? LocationService.defaultLatitude;
-    double geoLong = position.longitude ?? LocationService.defaultLongitude;
 
     switch (_filterDistance) {
       case FilterDistance.None:
@@ -105,19 +107,19 @@ class BusinessProvider with ChangeNotifier {
         distanceString = '1';
 
         query = getWhereGeo(
-            query, sectionDistance, distanceString, geoLat, geoLong);
+            query, sectionDistance, distanceString, latitude, longitude);
         break;
       case FilterDistance.Five:
         sectionDistance = GeoHash.m5;
         distanceString = '5';
         query = getWhereGeo(
-            query, sectionDistance, distanceString, geoLat, geoLong);
+            query, sectionDistance, distanceString, latitude, longitude);
         break;
       case FilterDistance.Twenty:
         sectionDistance = GeoHash.m20;
         distanceString = '20';
         query = getWhereGeo(
-            query, sectionDistance, distanceString, geoLat, geoLong);
+            query, sectionDistance, distanceString, latitude, longitude);
         break;
       default:
     }
@@ -143,9 +145,9 @@ class BusinessProvider with ChangeNotifier {
   }
 
   Query getWhereGeo(Query query, double sectionDistance, String distanceString,
-      double geoLat, double geoLong) {
-    double tapLat = 90 - geoLat;
-    double tapLong = 180 - geoLong;
+      double latitude, double longitude) {
+    double tapLat = 90 - latitude;
+    double tapLong = 180 - longitude;
 
     String latZoneString;
     String longZoneString;

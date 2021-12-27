@@ -41,7 +41,7 @@ class _BusinessAddScreenState extends State<BusinessAddScreen> {
         _formSubmitFailed = false;
         _formKey.currentState.save();
       });
-      businessForm
+      await businessForm
           .setLocation(); //Needing to add this function due to lat/long being taken out of Placemark
       final businessMap = businessForm.toMap();
       final submitFuture = Provider.of<BusinessProvider>(context, listen: false)
@@ -49,6 +49,8 @@ class _BusinessAddScreenState extends State<BusinessAddScreen> {
 
       final submissionResults = await showSubmissionDialog(
           context: context, onSubmitFuture: submitFuture);
+
+      Navigator.of(context).pop(true);
 
       bool isSuccess = submissionResults.submissionSuccess;
       final results = submissionResults.futureResult as DocumentReference;
@@ -99,7 +101,7 @@ class _BusinessAddScreenState extends State<BusinessAddScreen> {
                               await ConfirmationDialog.asyncConfirmDialog(
                                   context);
                           if (action == ConfirmAction.ACCEPT) {
-                            Navigator.of(context).pop(true);
+                            Navigator.of(context).pop(false);
                           }
                         },
                       );
@@ -130,7 +132,7 @@ class _BusinessAddScreenState extends State<BusinessAddScreen> {
                             filled: true,
                             hintText: "Name",
                           ),
-                          autovalidate: _autoValidate,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             String result = value.trim();
                             if (result.isEmpty) {

@@ -1,13 +1,12 @@
 part of location_library;
 
-
 class PlacemarkUserLocationItem extends StatelessWidget {
-  PlacemarkUserLocationItem();
+  PlacemarkUserLocationItem(this.userPlacemark);
+
+  final Placemark userPlacemark;
 
   @override
   Widget build(BuildContext context) {
-    Placemark userPlacemark = LocationService.userPlacemark;
-
     if (userPlacemark == null) {
       return null;
     }
@@ -35,7 +34,8 @@ class PlacemarkUserLocationItem extends StatelessWidget {
           //     PlacemarkScreenType.Form)
           //   {Provider.of<BusinessForm>(context).placemark = userPlacemark},
           // LocationProvider.setSelectPlacemark(userPlacemark),
-          Navigator.of(context).pop(PlacemarkResults(placemark: userPlacemark, type:  PlacemarkResultsType.User))
+          Navigator.of(context).pop(PlacemarkResults(
+              placemark: userPlacemark, type: PlacemarkResultsType.User))
         },
       ),
     );

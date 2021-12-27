@@ -11,20 +11,16 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
   bool _isInit = true;
   bool _useFutureBuilder = false;
 
-  Future<void> getPlacemarks;
-  Future<void> getUserPlacemark;
+  Future<List<Placemark>> placemarks;
+  Future<Placemark> userPlacemark;
 
   _getPlacemarks(BuildContext context, String address) {
     setState(() {
       _useFutureBuilder = true;
-      getPlacemarks = LocationService.getListPlacemark(address);
-    });
-  }
-
-  _getUserPlacemark(BuildContext context) {
-    setState(() {
-      //_useFutureBuilder = true;
-      getUserPlacemark = LocationService.setUserPlacemark();
+      placemarks = locationFromAddress(address).then(
+        (locations) => placemarkFromCoordinates(
+            locations.first.latitude, locations.first.longitude),
+      );
     });
   }
 
@@ -38,9 +34,14 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
     super.didChangeDependencies();
 
     if (_isInit) {
-      _getUserPlacemark(context);
+      //_getUserPlacemark(context);
+
+      userPlacemark = Geolocator.getCurrentPosition()
+          .then((position) =>
+              placemarkFromCoordinates(position.latitude, position.longitude))
+          .then((placmarkList) => placmarkList.first);
     }
-    LocationService.isNeedingGet = false;
+    //LocationService.isNeedingGet = false;
     _isInit = false;
   }
 
@@ -97,14 +98,15 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
               //Divider(),
               //Expanded(child: ,)
               Container(
-                  //child: sizedBoxSpace,
-                  color: Colors.grey[300],
-                  constraints: BoxConstraints(maxHeight: 10),
-                  ),
-              FutureBuilder<void>(
+                //child: sizedBoxSpace,
+                color: Colors.grey[300],
+                constraints: BoxConstraints(maxHeight: 10),
+              ),
+              FutureBuilder<Placemark>(
                 future:
-                    getUserPlacemark, // a previously-obtained Future<void> or null
-                builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+                    userPlacemark, // a previously-obtained Future<void> or null
+                builder:
+                    (BuildContext context, AsyncSnapshot<Placemark> snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.none:
                     // return Text('Press button to start.');
@@ -114,7 +116,7 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
                     case ConnectionState.done:
                       if (snapshot.hasError)
                         return Text('Error: ${snapshot.error}');
-                      return PlacemarkUserLocationItem();
+                      return PlacemarkUserLocationItem(snapshot.data);
                   }
                   return null; // unreachable
                 },
@@ -127,21 +129,21 @@ class _LocationSelectScreenState extends State<LocationSelectScreen> {
               Expanded(
                 child: !_useFutureBuilder
                     ? sizedBoxSpace
-                    : FutureBuilder<void>(
+                    : FutureBuilder<List<Placemark>>(
                         future:
-                            getPlacemarks, // a previously-obtained Future<void> or null
+                            placemarks, // a previously-obtained Future<void> or null
                         builder: (BuildContext context,
-                            AsyncSnapshot<void> snapshot) {
+                            AsyncSnapshot<List<Placemark>> snapshot) {
                           switch (snapshot.connectionState) {
                             case ConnectionState.none:
-                           
+
                             case ConnectionState.active:
                             case ConnectionState.waiting:
                               return Center(child: CircularProgressIndicator());
                             case ConnectionState.done:
                               if (snapshot.hasError)
                                 return Text('Error: ${snapshot.error}');
-                              return PlacemarkList();
+                              return PlacemarkList(snapshot.data);
                           }
                           return null; // unreachable
                         },
